@@ -1,0 +1,8 @@
+__pycache__/
+.sonar/
+
+# Secrets & runtime config — commit only the *.example versions
+app.yaml
+**/app.yaml
+.env
+*.env

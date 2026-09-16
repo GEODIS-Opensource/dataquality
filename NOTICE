@@ -1,0 +1,23 @@
+GDM Self-Service Data Quality Platform
+Copyright 2026 GEODIS
+
+This product is licensed under the Apache License, Version 2.0 (see the LICENSE file).
+
+This product includes third-party open-source software. A complete inventory of
+those dependencies, their versions, and their licenses is provided in the
+THIRD-PARTY-NOTICES.md file distributed with this product.
+
+The following third-party components carry attribution or weak-copyleft terms that
+require specific acknowledgement:
+
+  - psycopg2-binary — Copyright (C) the psycopg authors.
+    Licensed under the GNU Lesser General Public License v3.0 or later, with the
+    OpenSSL exception. Used as an unmodified, separately installable dependency.
+    Source: https://github.com/psycopg/psycopg2
+
+  - certifi — Copyright (C) Kenneth Reitz and contributors.
+    Licensed under the Mozilla Public License 2.0.
+    Source: https://github.com/certifi/python-certifi
+
+See THIRD-PARTY-NOTICES.md for the full list and for the location of each
+component's license text.
