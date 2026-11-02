@@ -1,0 +1,93 @@
+# Backend — Databricks App configuration (EXAMPLE)
+# Copy to app.yaml and fill in your own values. Do NOT commit the real app.yaml.
+# Prefer Databricks secrets / secret-backed env vars over plaintext for all credentials.
+command: ["uvicorn", "main:app", "--host=0.0.0.0", "--port=8000"]
+
+# Enable on-behalf-of-user authentication
+on_behalf_of_user_authentication: true
+
+# User-specific resource authorizations
+resources:
+  - name: jobs
+    description: "Allow users to create and manage Databricks jobs with their own credentials"
+    jobs:
+      permission: "CAN_MANAGE_RUN"
+  - name: <lakebase-database-resource-name>
+    description: "Lakebase PostgreSQL database for app metadata"
+    lakebase:
+      permission: "CAN_USE"
+
+env:
+  - name: JOB_ID
+    value: "<databricks-job-id>"
+  - name: UC_CATALOG
+    value: "<unity-catalog-name>"
+  - name: UC_SCHEMA
+    value: "<app-metadata-schema>"
+  - name: UC_RESULTS_SCHEMA
+    value: "<dq-results-schema>"
+  - name: UC_UPLOAD_VOLUME
+    value: "/Volumes/<catalog>/<schema>/<upload-volume>"
+
+  # Azure Service Principal credentials
+  # Store the secret in Databricks secrets rather than inline.
+  - name: ARM_CLIENT_ID
+    value: "<azure-sp-client-id>"
+  - name: ARM_CLIENT_SECRET
+    value: "<azure-sp-client-secret>"   # use a secret reference, not a literal
+  - name: ARM_TENANT_ID
+    value: "<azure-tenant-id>"
+
+  # Databricks workspace & SQL Warehouse
+  - name: DATABRICKS_HOST
+    value: "https://<workspace-host>.azuredatabricks.net"
+  - name: DATABRICKS_SERVER_HOSTNAME
+    value: "<workspace-host>.azuredatabricks.net"
+  - name: DATABRICKS_HTTP_PATH
+    value: "/sql/1.0/warehouses/<warehouse-id>"
+  - name: SERVERLESS_WAREHOUSE_ID
+    value: "<warehouse-id>"
+  - name: EXISTING_CLUSTER_ID
+    value: "<cluster-id>"
+  - name: DQ_NOTEBOOK_PATH
+    value: "/Workspace/Shared/<dq-check-runner-notebook>"
+
+  # Lakebase PostgreSQL Database (app metadata)
+  # PGPASSWORD is injected and auto-refreshed by Databricks Apps — do NOT set it here.
+  - name: PG_HOST
+    value: "<lakebase-host>.database.azuredatabricks.net"
+  - name: PG_PORT
+    value: "5432"
+  - name: PG_DATABASE
+    value: "<database-name>"
+  - name: PG_USER
+    value: "<service-principal-uuid>"
+  - name: PG_SCHEMA
+    value: "<schema-name>"
+  - name: PG_SSLMODE
+    value: "require"
+
+  # OpenMetadata integration
+  # Store the token in Databricks secrets rather than inline.
+  - name: OMD_TOKEN
+    value: "<openmetadata-bot-token>"   # use a secret reference, not a literal
+  - name: OMD_BASE_URL
+    value: "https://<openmetadata-host>/api"
+  - name: OMD_NOTEBOOK_PATH
+    value: "/Workspace/Shared/notebooks/push_dq_to_omd"
+  - name: OMD_PAYLOAD_NOTEBOOK_PATH
+    value: "/Workspace/Shared/notebooks/prepare_dq_payload"
+  - name: OMD_PUSH_NOTEBOOK_PATH
+    value: "/Workspace/Shared/notebooks/push_dq_to_omd"
+
+  # Job cluster config for the OMD notebook (align to your cluster policy)
+  - name: OMD_CLUSTER_NODE_TYPE
+    value: "<node-type>"
+  - name: OMD_CLUSTER_SPARK_VERSION
+    value: "<spark-version>"
+  - name: OMD_CLUSTER_INSTANCE_POOL_ID
+    value: "<instance-pool-id>"
+  - name: OMD_CLUSTER_DRIVER_INSTANCE_POOL_ID
+    value: "<driver-instance-pool-id>"
+  - name: OMD_CLUSTER_RUNTIME_ENGINE
+    value: "STANDARD"

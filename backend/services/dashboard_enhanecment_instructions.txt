@@ -1,0 +1,349 @@
+Instructions for Enhancing the Data Quality Dashboard
+Objective
+Improve the existing Data Quality dashboard by adding:
+Semantic interpretation of metrics
+Executive-level summary
+Better UX and readability
+Automated insights based on thresholds
+Markdown rendering for semantic sections
+The dashboard must remain fully automated, meaning:
+All summaries are generated dynamically
+No manual inputs
+Logic relies only on available dashboard data
+1. Dashboard Layout Changes
+Redesign the Top Section (Hero Section)
+The current top area contains a large logo and unused space.
+Replace it with a two-column layout.
+Left column
+Display:
+Logo
+Dashboard title
+Dataset metadata
+Execution metadata
+Quality thresholds
+Example structure:
+Project metadata:
+Project name
+Job name
+Dataset name
+Execution timestamp
+Execution scope:
+Number of rows analyzed
+Number of columns analyzed
+Threshold legend:
+OK threshold
+Monitor threshold
+Error threshold
+This section should remain compact.
+Right column
+Add a semantic interpretation section called:
+Quality Summary
+This section will display Markdown-rendered insight text generated dynamically.
+2. Markdown Rendering Requirements
+All semantic insight sections must be rendered using Markdown so the output is structured and readable.
+ must apply the following formatting rules.
+Markdown Headers
+Main sections must use:
+Markdown
+Copier le code
+## Section Title
+Example:
+Markdown
+Copier le code
+## Quality Summary
+Subsections
+Use subheaders:
+Markdown
+Copier le code
+### Subsection
+Example:
+Markdown
+Copier le code
+### Scope analyzed
+Bullet Lists
+Use bullet lists for concise insights:
+Markdown
+Copier le code
+- insight
+- insight
+- insight
+Highlight Important Values
+Always highlight key numbers using bold:
+Markdown
+Copier le code
+Overall score: **100%**
+Column Names
+Column names must always be rendered as inline code:
+Markdown
+Copier le code
+`column_name`
+Example:
+Markdown
+Copier le code
+Lowest scoring column: `customer_email`
+Status Emojis (Recommended)
+Use simple visual indicators:
+Status
+Emoji
+Excellent
+🟢
+Monitor
+🟡
+Error
+🔴
+Info
+🔎
+3. Quality Summary Section
+Generate a semantic interpretation of the dashboard.
+Use the following Markdown structure.
+Markdown
+Copier le code
+## Quality Summary
+ 
+🟢 **Overall assessment:** Data quality is **excellent** across the analyzed scope.
+ 
+### Scope analyzed
+- **Rows analyzed:** {rows_analyzed}
+- **Columns analyzed:** {columns_analyzed}
+ 
+### Status distribution
+- 🟢 **Healthy columns:** {ok_columns}
+- 🟡 **Columns to monitor:** {monitor_columns}
+- 🔴 **Columns requiring action:** {error_columns}
+ 
+### Dimension insights
+- **Strongest dimension:** {best_dimension} ({score}%)
+- **Weakest dimension:** {weakest_dimension} ({score}%)
+ 
+### Column insights
+- **Lowest scoring column:** `{column_name}` ({score}%)
+ 
+### Interpretation
+Provide a short explanation of what the results mean and whether remediation is needed.
+All values must be calculated dynamically from the dashboard metrics.
+4. Global Quality Assessment Logic
+ must determine the global status based on thresholds.
+Excellent
+Conditions:
+overall_score == 100
+monitor_columns == 0
+error_columns == 0
+Text:
+Markdown
+Copier le code
+🟢 Data quality is **excellent**. All analyzed columns meet expected thresholds.
+Good / Stable
+Conditions:
+overall_score >= OK threshold
+monitor_columns > 0
+error_columns == 0
+Text:
+Markdown
+Copier le code
+🟢 Data quality is globally **strong**, though some columns should be monitored.
+Warning
+Conditions:
+error_columns > 0
+error_columns ≤ 20% of columns
+Text:
+Markdown
+Copier le code
+🟡 Some data quality issues were detected. Targeted remediation may be required.
+Critical
+Conditions:
+error_columns > 20% of columns
+Text:
+Markdown
+Copier le code
+🔴 Data quality issues are significant and should be addressed before downstream usage.
+5. Dimension Analysis
+Compute the average score for each dimension.
+Example:
+Completeness
+Validity
+Uniqueness
+Consistency
+Determine:
+Best performing dimension
+Weakest dimension
+Markdown output:
+Markdown
+Copier le code
+## Dimension Insights
+ 
+### Completeness
+- Average score: **{score}%**
+- Columns analyzed: **{count}**
+ 
+### Validity
+- Average score: **{score}%**
+- Columns analyzed: **{count}**
+If one dimension is weaker:
+Markdown
+Copier le code
+⚠️ **Validity is currently the weakest dimension.**
+If all are equal:
+Markdown
+Copier le code
+All quality dimensions show consistent performance.
+6. Weakest Column Detection
+Identify the column with the lowest score.
+Markdown structure:
+Markdown
+Copier le code
+## Column Quality Insight
+ 
+🔎 **Lowest scoring column:** `{column_name}`
+ 
+- Score: **{score}%**
+- Invalid values: **{invalid_count}**
+- Null values: **{null_count}**
+- Primary issue driver: **missing values / invalid values**
+If all columns have identical scores:
+Markdown
+Copier le code
+## Column Quality Insight
+ 
+All analyzed columns share the same quality score.
+ 
+No weakest column was identified in this run.
+7. Issue Breakdown Section
+If issues exist, generate a section explaining them.
+Markdown structure:
+Markdown
+Copier le code
+## Issue Breakdown
+ 
+### Missing values
+- Total null values detected: **{null_total}**
+ 
+### Invalid values
+- Records failing validation rules: **{invalid_total}**
+If no issues exist, omit this section.
+8. Recommended Actions Section
+If issues exist:
+Markdown
+Copier le code
+## Recommended Actions
+ 
+- Review columns with the lowest quality scores.
+- Investigate upstream sources producing missing values.
+- Validate transformation logic.
+If no issues exist:
+Markdown
+Copier le code
+## Recommended Actions
+ 
+No immediate remediation is required.
+ 
+Continue monitoring data quality across future executions.
+9. Trend vs Previous Run
+If historical data exists, compute score deltas.
+Markdown structure:
+Markdown
+Copier le code
+## Trend vs Previous Run
+ 
+- Overall score change: **{delta}%**
+- Completeness change: **{delta}%**
+- Validity change: **{delta}%**
+ 
+📈 Data quality has **improved compared to the previous run**.
+If historical data is unavailable, omit the section.
+10. Threshold Legend
+Render thresholds using Markdown tables.
+Markdown
+Copier le code
+## Quality Thresholds
+ 
+| Status | Score Range |
+|------|------|
+| 🟢 OK | ≥ {ok_threshold}% |
+| 🟡 Monitor | {monitor_low}% – <{ok_threshold}% |
+| 🔴 Error | < {monitor_low}% |
+11. Improve KPI Card Labels
+Replace labels:
+Old
+New
+OK
+Healthy columns
+To monitor
+Columns to monitor
+Error
+Columns requiring action
+12. Dashboard Title Improvement
+Replace current long title with:
+Main title:
+Data Quality Dashboard
+Subtitle:
+{project_name} / {job_name} / {dataset_name}
+13. Reduce Banner Height
+The current logo banner is too large.
+Adjust:
+Reduce height by approximately 50%
+Use freed space for the semantic summary section.
+14. Score Distribution Visualization
+Add a chart showing distribution of column quality.
+Options:
+Bar chart showing:
+Healthy columns
+Columns to monitor
+Columns requiring action
+or
+Score bucket distribution:
+100%
+99–100%
+98–99%
+<98%
+15. Top Columns to Review
+If many columns exist:
+Create a section listing the lowest scoring columns.
+Sort by score ascending.
+Display top 5.
+16. Status Icons
+Add visual indicators to improve readability:
+Status
+Icon
+OK
+green check
+Monitor
+yellow warning
+Error
+red alert
+17. Drill-Down Capability
+Allow users to click a column to view:
+Failed rows
+Failed rules
+Detailed quality metrics
+18. Export Options
+Add export functionality:
+Export dashboard summary
+Export failing rows
+Export detailed quality report
+19. Filters
+Add optional filters:
+Dimension
+Column name
+Status
+Rule type
+20. Final Dashboard Structure
+The final dashboard should follow this order:
+Header section (logo + metadata)
+Quality Summary (Markdown rendered)
+Threshold legend
+KPI cards
+Dimension insights
+Column quality insight
+Issue breakdown
+Recommended actions
+Trend vs previous run
+Column detail tables
+Visualizations
+Important Constraints
+must ensure:
+All semantic text uses Markdown
+All values are computed dynamically
+Sections automatically hide when not applicable
+No hardcoded values appear in summaries
+Text remains short, clear, and executive-friendly
+If you'd like, I can also give you a much stronger  prompt that forces it to compute insights safely (without hallucinating metrics) — which is extremely important when generating semantic summaries for data quality dashboards.

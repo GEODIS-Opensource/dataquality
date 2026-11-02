@@ -37,7 +37,7 @@ pip-audit             # (recommended) check dependencies for known vulnerabiliti
 Add this header to the top of new source files:
 
 ```python
-# Copyright 2026 GEODIS
+# Copyright 2026
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,15 +52,14 @@ Add this header to the top of new source files:
 # limitations under the License.
 ```
 
-## Developer Certificate of Origin / licensing of contributions
+## Contribution license agreement
 
 By contributing, you agree that your contributions are licensed under the project's
 [Apache License 2.0](LICENSE), consistent with section 5 ("Submission of Contributions")
 of that license.
 
-> **Maintainers:** confirm with your legal team whether contributions should require a
-> signed [DCO](https://developercertificate.org/) (`git commit -s`) or a Contributor
-> License Agreement (CLA), and update this section accordingly.
+The developer has the possiblity to add a change log as a comment at the end of the header if they want to respecting the following format:
+| Contributor | Date and time | Description |
 
 ## Code of Conduct
 

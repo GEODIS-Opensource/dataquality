@@ -1,0 +1,12 @@
+# Keep SBOM inputs/outputs LF so the manifest SHA-256 and the Ed25519 signature
+# are reproducible across platforms (a CRLF checkout would change the bytes).
+backend/requirements.txt   text eol=lf
+frontend/requirements.txt  text eol=lf
+SBOM/SBOM.spdx30.json      text eol=lf
+scripts/postprocess_sbom.py   text eol=lf
+scripts/sign-sbom.sh          text eol=lf
+
+# Signature and key material are byte-exact — never normalize line endings.
+SBOM/*.sig      binary
+SBOM/*.sig.b64  binary
+SBOM/*.pem      binary

@@ -1,8 +1,16 @@
 __pycache__/
 .sonar/
+doc/
+.scannerwork/
+coverage.xml
+.coverage
 
 # Secrets & runtime config — commit only the *.example versions
 app.yaml
 **/app.yaml
 .env
 *.env
+
+# SBOM signing — private key must never be committed (public key + .sig are safe)
+SBOM/sbom-signing-key.pem
+*-signing-key.pem

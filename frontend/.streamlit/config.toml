@@ -1,0 +1,13 @@
+# This file configures Streamlit's navigation and page visibility
+[theme]
+primaryColor = "#1a73e8"
+backgroundColor = "#181c24"
+secondaryBackgroundColor = "#23293a"
+textColor = "#ffffff"
+
+[server]
+headless = true
+
+[pages]
+hide = ["app.py"]
+order = ["pages/Tool.py"]

@@ -1,0 +1,62 @@
+name: Sign SBOM
+
+# Post-processes and signs SBOM/SBOM.spdx30.json, then uploads the signed
+# artifacts. Run it after the SonarQube scan that (re)generates the SBOM.
+#
+# Requires a repository secret SBOM_SIGNING_KEY_PEM containing the Ed25519
+# private key in PEM form (the public key + .sig are committed; the private key
+# is git-ignored and lives only in the secret / your key store).
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "SBOM/SBOM.spdx30.json"
+      - "backend/requirements.txt"
+      - "frontend/requirements.txt"
+      - "scripts/postprocess_sbom.py"
+      - "scripts/add_sbom_hashes.py"
+      - "scripts/add_sbom_copyrights.py"
+      - "scripts/sign-sbom.sh"
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Materialise signing key from secret
+        env:
+          SBOM_SIGNING_KEY_PEM: ${{ secrets.SBOM_SIGNING_KEY_PEM }}
+        run: |
+          if [ -z "${SBOM_SIGNING_KEY_PEM:-}" ]; then
+            echo "::error::Secret SBOM_SIGNING_KEY_PEM is not set. Add the Ed25519 private key as a repo secret."
+            exit 1
+          fi
+          printf '%s' "$SBOM_SIGNING_KEY_PEM" > "$RUNNER_TEMP/sbom-signing-key.pem"
+          chmod 600 "$RUNNER_TEMP/sbom-signing-key.pem"
+
+      - name: Post-process and sign SBOM
+        env:
+          SBOM_SIGNING_KEY: ${{ runner.temp }}/sbom-signing-key.pem
+        run: bash scripts/sign-sbom.sh
+
+      - name: Upload signed SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-sbom
+          path: |
+            SBOM/SBOM.spdx30.json
+            SBOM/SBOM.spdx30.json.sig
+            SBOM/SBOM.spdx30.json.sig.b64
+            SBOM/sbom-signing-key.pub.pem
+
+      - name: Remove signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sbom-signing-key.pem"

@@ -1,0 +1,6 @@
+# Requirements for frontend
+streamlit==1.66.1
+pandas>=2.3.3,<3
+pillow>=13.0.0,<14
+requests>=2.34.2
+databricks-sdk>=0.158.0

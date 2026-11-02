@@ -1,0 +1,28 @@
+# Frontend — Databricks App configuration (EXAMPLE)
+# Copy to app.yaml and fill in your own values. Do NOT commit the real app.yaml.
+command: ["streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"]
+
+# Enable on-behalf-of-user authentication
+on_behalf_of_user_authentication: true
+
+resources:
+  - name: jobs
+    description: "Allow users to create and manage Databricks jobs with their own credentials"
+    jobs:
+      permission: "CAN_MANAGE_RUN"
+
+env:
+  - name: STREAMLIT_SERVER_HEADLESS
+    value: "true"
+  - name: STREAMLIT_SERVER_FILE_WATCHER_TYPE
+    value: "none"
+
+  # Databricks workspace & SQL Warehouse
+  - name: DATABRICKS_SERVER_HOSTNAME
+    value: "<workspace-host>.azuredatabricks.net"
+  - name: DATABRICKS_HTTP_PATH
+    value: "/sql/1.0/warehouses/<warehouse-id>"
+
+  # URL of the deployed backend Databricks App
+  - name: API_BASE_URL
+    value: "https://<backend-app-name>.azuredatabricksapps.com"

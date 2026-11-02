@@ -1,0 +1,21 @@
+# Test Requirements
+# Install with: pip install -r tests/requirements-test.txt
+
+# Testing framework
+pytest>=9.2.0
+pytest-cov>=7.1.0
+pytest-mock>=3.17.0
+
+# Mocking and test utilities
+responses>=0.26.3
+requests-mock>=1.12.1
+
+# Data manipulation
+pandas>=2.3.3,<3
+numpy>=2.5.4
+
+# For performance benchmarking
+pytest-benchmark>=5.3.0
+
+# For test reporting
+pytest-html>=4.2.0

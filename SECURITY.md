@@ -19,9 +19,9 @@ Please include as much of the following as you can:
 
 ## What to expect
 
-- We aim to acknowledge your report within **3 business days**.
-- We will provide an assessment and expected remediation timeline after triage.
-- We will keep you informed of progress and coordinate disclosure timing with you.
+- We aim to acknowledge your report within **7 business days**.
+- We aim to provide an assessment and expected remediation timeline after triage.
+- We try to keep you informed of progress and coordinate disclosure timing with you.
 - With your permission, we are happy to credit you once a fix is released.
 
 ## Scope

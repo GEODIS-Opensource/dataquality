@@ -26,7 +26,7 @@ privately to the project maintainers responsible for enforcement, using GitHub's
 or by contacting a maintainer directly. Do not report Code of Conduct concerns in public
 issues or pull requests.
 
-All complaints will be reviewed and investigated promptly and fairly. Maintainers are
+All complaints may be reviewed and investigated promptly and fairly. Maintainers are
 obligated to respect the privacy and security of the reporter of any incident.
 
 ## Attribution
