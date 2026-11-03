@@ -158,9 +158,20 @@ Commit `SBOM.spdx30.json`, `.sig`, `.sig.b64` and (only if you intentionally rot
 
 [`.github/workflows/sbom-sign.yml`](../.github/workflows/sbom-sign.yml) runs `scripts/sign-sbom.sh`
 on manual dispatch and on pushes touching the SBOM, the `requirements.txt` files or the SBOM
-scripts. It reads the private key from the `SBOM_SIGNING_KEY_PEM` repo secret and uploads the
-signed files as the `signed-sbom` artifact. Because the output is deterministic, CI's signature
-should match the committed one byte for byte.
+scripts. It reads the private key from the `SBOM_SIGNING_KEY_PEM` repo secret, signs the SBOM,
+then publishes a [GitHub artifact attestation](https://docs.github.com/actions/security-for-github-actions/using-artifact-attestations)
+(Sigstore-signed build provenance) for `SBOM.spdx30.json`, `.sig`, `.sig.b64` and
+`sbom-signing-key.pub.pem`. Attestations are public and listed on the repository's
+**Attestations** page. Because the output is deterministic, CI's files should match the committed
+ones byte for byte, so the committed files can be verified directly:
+
+```bash
+gh attestation verify SBOM/SBOM.spdx30.json        --repo geodis-opensource/dataquality
+gh attestation verify SBOM/sbom-signing-key.pub.pem --repo geodis-opensource/dataquality
+```
+
+This proves the files were produced by this repository's workflow; the Ed25519 signature
+(verified in step 3) still proves they were signed with the project key.
 
 ## Configuration
 

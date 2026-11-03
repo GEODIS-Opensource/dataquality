@@ -1,11 +1,15 @@
 name: Sign SBOM
 
-# Post-processes and signs SBOM/SBOM.spdx30.json, then uploads the signed
-# artifacts. Run it after the SonarQube scan that (re)generates the SBOM.
+# Post-processes and signs SBOM/SBOM.spdx30.json, then publishes a GitHub
+# artifact attestation (Sigstore-signed build provenance) for the signed files.
+# Run it after the SonarQube scan that (re)generates the SBOM.
 #
 # Requires a repository secret SBOM_SIGNING_KEY_PEM containing the Ed25519
 # private key in PEM form (the public key + .sig are committed; the private key
 # is git-ignored and lives only in the secret / your key store).
+#
+# Anyone can verify the committed files against the attestation with:
+#   gh attestation verify SBOM/SBOM.spdx30.json --repo geodis-opensource/dataquality
 
 on:
   workflow_dispatch:
@@ -22,6 +26,10 @@ on:
 jobs:
   sign:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write      # Sigstore signing via the workflow's OIDC identity
+      attestations: write  # store the attestation on the repo
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,11 +55,10 @@ jobs:
           SBOM_SIGNING_KEY: ${{ runner.temp }}/sbom-signing-key.pem
         run: bash scripts/sign-sbom.sh
 
-      - name: Upload signed SBOM
-        uses: actions/upload-artifact@v4
+      - name: Attest signed SBOM
+        uses: actions/attest-build-provenance@v2
         with:
-          name: signed-sbom
-          path: |
+          subject-path: |
             SBOM/SBOM.spdx30.json
             SBOM/SBOM.spdx30.json.sig
             SBOM/SBOM.spdx30.json.sig.b64
